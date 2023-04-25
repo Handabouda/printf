@@ -1,51 +1,50 @@
-#include <unistd.h>
-#include <stdarg.h>
+#include "main.h"
+
 /**
- * _printf - produces output according to a format
- * @format: format string
- * Return: the number of characters printed
- * (excluding the null byte used to end output to
- * strings)
+ * _printf - produces output according to a format.
+ * @format: A character string containing zero or more directives.
+ * @...: Variadic arguments for the format string.
+ *
+ * Return: The number of characters printed (excluding the null byte).
  */
 int _printf(const char *format, ...)
 {
+	int i, count = 0;
+	char c, *s;
 	va_list args;
-	char *str, ch;
-	int count = 0;
 
 	va_start(args, format);
 
-	while (*format)
+	for (i = 0; format && format[i]; i++)
 	{
-		if (*format == '%')
+		if (format[i] == '%')
 		{
-			format++;
-			switch (*format)
+			i++;
+			switch (format[i])
 			{
-			case 'c':
-				ch = (char) va_arg(args, int);
-				count += _putchar(ch);
-				break;
-			case 's':
-				str = va_arg(args, char *);
-				while (*str)
-				{
-					count += _putchar(*str);
-					str++;
-				}
-				break;
-			case '%':
-				count += _putchar('%');
-				break;
-			default:
-				count += _putchar('%');
-				count += _putchar(*format);
-				break;
+				case 'c':
+					c = (char)va_arg(args, int);
+					count += _putchar(c);
+					break;
+				case 's':
+					s = va_arg(args, char *);
+					if (!s)
+						s = "(null)";
+					count += _puts(s);
+					break;
+				case '%':
+					count += _putchar('%');
+					break;
+				default:
+					count += _putchar('%');
+					count += _putchar(format[i]);
+					break;
 			}
 		}
 		else
-			count += _putchar(*format);
-		format++;
+		{
+			count += _putchar(format[i]);
+		}
 	}
 	va_end(args);
 	return (count);
