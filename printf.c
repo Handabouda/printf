@@ -1,52 +1,23 @@
 #include "main.h"
 
 /**
- * _printf - produces output according to a format.
- * @format: A character string containing zero or more directives.
- * @...: Variadic arguments for the format string.
+ * _printf - produces output according to a format
+ * @format: character string specifying the format
  *
- * Return: The number of characters printed (excluding the null byte).
+ * Return: the number of characters printed
  */
 int _printf(const char *format, ...)
 {
-	int i, count = 0;
-	char c, *s;
-	va_list args;
+	int printed_chars;
+	va_list arg_list;
 
-	va_start(args, format);
+	va_start(arg_list, format);
 
-	for (i = 0; format && format[i]; i++)
-	{
-		if (format[i] == '%')
-		{
-			i++;
-			switch (format[i])
-			{
-				case 'c':
-					c = (char)va_arg(args, int);
-					count += _putchar(c);
-					break;
-				case 's':
-					s = va_arg(args, char *);
-					if (!s)
-						s = "(null)";
-					count += _puts(s);
-					break;
-				case '%':
-					count += _putchar('%');
-					break;
-				default:
-					count += _putchar('%');
-					count += _putchar(format[i]);
-					break;
-			}
-		}
-		else
-		{
-			count += _putchar(format[i]);
-		}
-	}
-	va_end(args);
-	return (count);
+	/* call the parser and print the characters */
+	printed_chars = parser(format, arg_list);
+
+	va_end(arg_list);
+
+	return (printed_chars);
 }
 
